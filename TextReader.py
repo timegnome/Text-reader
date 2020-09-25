@@ -19,13 +19,13 @@ browser = Browser('chrome', **executable_path, headless=False)
 
 
 book_name = 'release that witch'
-book_name = input('Please enter the book_name').lower()
 
 website = input('Select website to scrape from: BN, Other').lower()
 
 # In[ ]:
 
 if website == 'bn':
+	book_name = input('Please enter the book_name').lower()
 	boxnovel(book_name,browser)
 else:
 	wuxiaco(book_name,browser)
