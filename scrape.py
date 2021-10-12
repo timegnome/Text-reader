@@ -12,7 +12,16 @@ def boxnovel(book,browser):
 		seperator = '-'
 		book = seperator.join(book.split(' '))
 		url = f"https://boxnovel.com/novel/{book}/"
+		#url = f"https://boxnovel.com/novel/{book}-boxnovel/"
 		browser.visit(url)
+		print ('\nPwausing...  (Hit WENTER to cwontinwue, twype qwuit to wexit.)')
+		while True:
+			response = input()
+			if response == 'Continue':
+				print ('Rwesuming...')
+				break
+			else:
+				print(url)
 		if requests.get(url).status_code == 404:
 			browser.driver.close()
 			sys.exit()
@@ -26,25 +35,26 @@ def boxnovel(book,browser):
 		sys.exit()
 	html = browser.html
 	soup = BeautifulSoup(html, 'html.parser')
-	container = soup.find_all("div", {"class": "summary-content"})
-	author = container[3].find("div", {"class": "author-content"}).find_all('a')
+	container = soup.find("div", {"class": "summary_content"})
+	author = container.find("div", {"class": "author-content"}).find_all('a')
 
 
 	# In[ ]:
 
 
-	with open(f'{book}.txt', 'w',encoding ='utf8') as out:
+	with open(f'Novels\{book}.txt', 'w',encoding ='utf8') as out:
 		chapter = 1
 		seperator = ', '
-		author_text = seperator.join([author[0].text, author[1].text])
+		author_text = seperator.join([a.text for a in author])
 		BookName = ' '.join([word.capitalize() for word in book.split('-')])
 		out.write('\t\t\t\t\t\t\t\t\t\t\t\t'+BookName+'\n\n')
 		out.write('\t\t\t\t\t\t\t\t\t\t\tAuthor:'+author_text+'\n\n\n')
 		
 		try:
-			# url = f"https://boxnovel.com/novel/{book}/chapter-{chapter}"
-			chapter_1.click()
-			# browser.visit(url)
+			url = f"https://boxnovel.com/novel/{book}/chapter-{chapter}"
+			# url = f"https://boxnovel.com/novel/{book}-boxnovel/chapter-{chapter}"
+			# chapter_1.click()
+			browser.visit(url)
 			time.sleep(5)
 			while True:
 				try:
@@ -57,6 +67,8 @@ def boxnovel(book,browser):
 						chp_title = text_left[0].find_all("p")[0].text
 						pgraphs = text_left[0].find_all("p")
 					except:
+						print ('No twext')
+						print (chp_title)
 						print('swomethwing bwroke mwe')
 						break
 					pgraphs.pop(0)
@@ -66,22 +78,32 @@ def boxnovel(book,browser):
 					for text in chapter_text:
 						out.write(text+'\n\n')
 					try :
-						next_page = browser.driver.find_element_by_class_name('next')
+						next_page = browser.driver.find_element_by_class_name('next_page')
 						next_page.click()
 					except :
+						print("OwO Click dwidn't work")
 						break
 				except KeyboardInterrupt:
-					print ('\nPausing...  (Hit ENTER to continue, type quit to exit.)')
+					print ('\nPwausing...  (Hit WENTER to cwontinwue, twype qwuit to wexit.)')
 					try:
+						print("before input")
 						response = input()
-						if response == 'quit':
+						print("after input")
+						if response.lower() == 'quit':
+							print ('Qwuiting scrwape')
 							break
-						print ('Resuming...')
+						print ('Rwesuming...')
 					except KeyboardInterrupt:
-						print ('Resuming...')
+						print ('Rwesuming...')
 						continue
 		except:
+			print ('Wrong Lwink')
 			print('Fwalure')
+	while True:
+		response = input()
+		if response == 'quit':
+			break
+		print ('Resuming...')
 	browser.driver.close()
 
 def wuxiaco(book,browser):
@@ -113,7 +135,7 @@ def wuxiaco(book,browser):
 	# In[ ]:
 
 
-	with open(f'{book}.txt', 'w',encoding ='utf8') as out:
+	with open(f'Novels\{book}.txt', 'w',encoding ='utf8') as out:
 		seperator = ', '
 		BookName = ' '.join([word.capitalize() for word in book.split('-')])
 		out.write('\t\t\t\t\t\t\t\t\t\t\t\t'+BookName+'\n\n')
@@ -158,4 +180,9 @@ def wuxiaco(book,browser):
 						continue
 		except:
 			print('Fwalure')
+	while True:
+		response = input()
+		if response == 'quit':
+			break
+		print ('Resuming...')
 	browser.driver.close()
